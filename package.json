@@ -1,0 +1,30 @@
+{
+  "name": "gray-scott-plus",
+  "version": "0.3.0",
+  "description": "Reaction Diffusion Gray Scott model plus extra bits of functionality.",
+  "engines": {
+    "node": "18.x"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "*"
+  },
+  "devDependencies": {
+    "got": "^11.3.0",
+    "tape": "^4.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/jyamadaportfolio.git"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express",
+    "p5"
+  ],
+  "license": "MIT"
+}
