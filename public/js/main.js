@@ -28,14 +28,16 @@ setup = () => {
             //gridNext[x][y].b = 1;
         }
     }
+
+    //updateGrid();
 }
 
 draw = () => {
 
     background(50);
-    //updateGrid();
+    updateGrid();
     drawPixels();
-    // step();
+    step();
 
 }
 
@@ -65,19 +67,22 @@ updateGrid = () => {
             const cellNow = gridNow[x][y];
             const cellNext = gridNext[x][y];
 
-
-
-
             //PICK UP HERE AND FIGURE OUT WHY THIS ISN'T UPGRADING CORRECTLY
+            const aNext = grayScott(cellNow, deltaA, getA, reactionA, feed);
+            const bNext = grayScott(cellNow, deltaB, getB, reactionB, kill);
 
+            // if(x > 100 && x < 110 && y > 100 && y < 110)
+            // {
+            //     console.log('');
+            //     console.log('a: ' + getA(cellNow));
+            //     console.log('dA: ' + deltaA);
+            //     console.log('laplaceA: ' + laplace(cellNow.x, cellNow.y, getA));
+            //     console.log('ab^2:' + reactionA(cellNow.a, cellNow.b));
+            //     console.log('feed: ' + feed(cellNow.a));
+            //     //console.log(aNext + ", " + bNext);
+            // }
 
-
-
-
-            cellNext.set(
-                grayScott(cellNow, deltaA, getA, reactionA, feed),
-                grayScott(cellNow, deltaB, getB, reactionB, kill)
-            );
+            cellNext.set(aNext, bNext);
         }
     }
 }
@@ -109,8 +114,8 @@ laplace = (x, y, f) => {
 
 getA = (c) => { return c.a; }
 getB = (c) => { return c.b; }
-reactionA = (a, b) => { return a * b * b;}
-reactionB = (a, b) => {return -reactionA(a, b);}
+reactionA = (a, b) => { return a * b * b * -1;}
+reactionB = (a, b) => { return a * b * b;}
 feed = (a) => { return feedRate * (1.0 - a); }
 kill = (b) => { return (killRate + feedRate) * b * -1.0;}
 
