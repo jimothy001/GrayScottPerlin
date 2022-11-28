@@ -33,17 +33,6 @@ let weightLftDn = weightDiagonal;
 let weightCtrDn = weightOrtho;
 let weightRgtDn = weightDiagonal;
 
-// let bias = p5.Vector(1.0, 1.0);
-// const dirLftUp = p5.Vector(-1, -1);
-// const dirCtrUp = p5.Vector(0, -1);
-// const dirRgtUp = p5.Vector(1, -1);
-// const dirLftCr = p5.Vector(-1, 0);
-// const dirCtrCr = p5.Vector(0, 0);
-// const dirRgtCr = p5.Vector(1, 0);
-// const dirLftDn = p5.Vector(-1, 1);
-// const dirCtrDn = p5.Vector(0, 1);
-// const dirRgtDn = p5.Vector(1, 1);
-
 setup = () => {
     console.log("setup!");
 
@@ -108,14 +97,13 @@ initGrids = (w, h) => {
 }
 
 updateGrid = () => {
-    
+
     for(let x = 0; x < w; x++)
     {
         for(let y = 0; y < h; y++)
         {
             const cellNow = gridNow[x][y];
             const cellNext = gridNext[x][y];
-
             const aNext = grayScott(cellNow, deltaA, laplaceA, getA, reactionA, feed);
             const bNext = grayScott(cellNow, deltaB, laplaceB, getB, reactionB, kill);
 
@@ -180,37 +168,6 @@ laplaceB = (x, y, f) => {
     return v;
 }
 
-// laplaceA = (x, y, f) => {
-//     let v = 0;
-//     v += f(gridNow[x][y]) * weightReset;
-//     v += f(gridNow[x - 1][y]) * weightLftCr;
-//     v += f(gridNow[x + 1][y]) * weightRgtCr;
-//     v += f(gridNow[x][y + 1]) * weightCtrDn;
-//     v += f(gridNow[x][y - 1]) * weightCtrUp;
-//     v += f(gridNow[x - 1][y - 1]) * weightLftUp;
-//     v += f(gridNow[x + 1][y - 1]) * weightRgtUp;
-//     v += f(gridNow[x + 1][y + 1]) * weightRgtDn;
-//     v += f(gridNow[x - 1][y + 1]) * weightLftDn;
-
-//     return v;
-// }
-
-// //laplaceB weights should be mirrored to laplaceA
-// laplaceB = (x, y, f) => {
-//     let v = 0;
-//     v += f(gridNow[x][y]) * weightReset;
-//     v += f(gridNow[x - 1][y]) * weightRgtCr;
-//     v += f(gridNow[x + 1][y]) * weightLftCr;
-//     v += f(gridNow[x][y + 1]) * weightCtrUp;
-//     v += f(gridNow[x][y - 1]) * weightCtrDn;
-//     v += f(gridNow[x - 1][y - 1]) * weightRgtDn;
-//     v += f(gridNow[x + 1][y - 1]) * weightLftDn;
-//     v += f(gridNow[x + 1][y + 1]) * weightLftUp;
-//     v += f(gridNow[x - 1][y + 1]) * weightRgtUp;
-
-//     return v;
-// }
-
 updateBias = (delta) => {
 
     bias = p5.Vector.add(bias, delta);
@@ -256,34 +213,13 @@ calcBias = (bias) => {
     weightRgtDn /= total;
 }
 
-calcBiasIndiv = (dir, bias, baseWeight) => {
-    
-    //return 0.01;
-    
+calcBiasIndiv = (dir, bias, baseWeight) => 
+{
     const sumX = dir.x + bias.x;
     const sumY = dir.y + bias.y;
 
     return sqrt((sumX * sumX) + (sumY * sumY)) * baseWeight * 0.25;
-
-    //return 0.0;
-    
-    //return p5.Vector.add(dir, bias).mag() * 0.01;
 }
-
-// laplace = (x, y, f) => {
-//     let v = 0;
-//     v += f(gridNow[x][y]) * weightReset;
-//     v += f(gridNow[x - 1][y]) * weightOrtho;
-//     v += f(gridNow[x + 1][y]) * weightOrtho;
-//     v += f(gridNow[x][y + 1]) * weightOrtho;
-//     v += f(gridNow[x][y - 1]) * weightOrtho;
-//     v += f(gridNow[x - 1][y - 1]) * weightDiagonal;
-//     v += f(gridNow[x + 1][y - 1]) * weightDiagonal;
-//     v += f(gridNow[x + 1][y + 1]) * weightDiagonal;
-//     v += f(gridNow[x - 1][y + 1]) * weightDiagonal;
-
-//     return v;
-// }
 
 getA = (c) => { return c.a; }
 getB = (c) => { return c.b; }
@@ -355,21 +291,15 @@ paint = (mX, mY, rangeScalar) => {
         {
             const d = dist(x, y, mX, mY);
 
-            //console.log(d);
-
             if(d > radius) continue;
 
             const vLinear = (radius - d) / radius;
             //const vPow = vLinear * vLinear * vLinear * 0.25;
             //const vGaussian = exp(vLinear * vLinear * -1);
-
             const vExp = map(exp(vLinear), 0, 15, 0, 1);
-
             const v = vExp;
 
             if( v > gridNow[x][y].b) gridNow[x][y].b =  v;
-
-            //console.log('paint');
         }
     }
 
