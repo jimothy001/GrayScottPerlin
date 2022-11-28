@@ -1,46 +1,51 @@
-const w = 512;
-const h = 512;
-const weightReset = -1;
-const weightOrtho = 0.2;
-const weightDiagonal = 0.05;
-const deltaA = 1.0;
-const deltaB = 0.5;
-const feedRate = 0.055;
-const killRate = 0.062; //0.08; //
-const timeScalar = 1.0;
-let gridNow = [];
-let gridNext = [];
-const paintRangeScalar = 0.1;
+const uiWidth = 256; //width of the ui bar
+const totalWidth = innerWidth; //total width of the p5 canvas. TODO: make this responsive to resizing 
+const w = totalWidth - uiWidth; //grid width. TODO: make this resolution adjustable and interpolate while drawing
+const h = 512; //grid height. TODO: make this resolution scalable and interpolate while drawing
 
-let dirLftUp = null;
-let dirCtrUp = null;
-let dirRgtUp = null;
-let dirLftCr = null;
-let dirCtrCr = null;
-let dirRgtCr = null;
-let dirLftDn = null;
-let dirCtrDn = null;
-let dirRgtDn = null;
+let gridNow = []; //grid current state
+let gridNext = []; //grid future state
 
-let biasVec = null;
-let weightLftUp = weightDiagonal;
-let weightCtrUp = weightOrtho;
-let weightRgtUp = weightDiagonal;
-let weightLftCr = weightOrtho;
-let weightCtrCr = weightReset;
-let weightRgtCr = weightOrtho;
-let weightLftDn = weightDiagonal;
-let weightCtrDn = weightOrtho;
-let weightRgtDn = weightDiagonal;
+const weightReset = -1; //reset weight for cell self
+const weightOrtho = 0.2; //base weight for cell ortho neighbors
+const weightDiagonal = 0.05; //base weight for cell diagonal neighbors
+const deltaA = 1.0; //base speed for A
+const deltaB = 0.5; //base speed for B
+let feedRate = 0.025; //0.0w55;
+let killRate = 0.06; //0.062; 
+let timeScalar = 1.0; //speed dampener
+let paintRangeScalar = 0.1; //paint brush radius
 
+let dirLftUp = null; //left up vector
+let dirCtrUp = null; //center up vector
+let dirRgtUp = null; //right up vector
+let dirLftCr = null; //left center vector
+let dirCtrCr = null; //center vector (0, 0)
+let dirRgtCr = null; //right center vector
+let dirLftDn = null; //left down vector
+let dirCtrDn = null; //center down vector
+let dirRgtDn = null; //right down vector
+
+let biasVec = null; //bias vector
+let weightLftUp = weightDiagonal; //left up result weight
+let weightCtrUp = weightOrtho; //center up result weight
+let weightRgtUp = weightDiagonal; //right up result weight
+let weightLftCr = weightOrtho; //left center result weight
+let weightCtrCr = weightReset; //center reset weight (-1)
+let weightRgtCr = weightOrtho; //right center result weight
+let weightLftDn = weightDiagonal; //left down result weight
+let weightCtrDn = weightOrtho; //center down result weight
+let weightRgtDn = weightDiagonal; //right down result weight
+
+//p5 setup. This is called once at the beginning of runtime
 setup = () => {
-    console.log("setup!");
+    //console.log("setup!");
 
-    createCanvas(w, h);
+    createCanvas(innerWidth, h);
     pixelDensity(1);
     initGrids(w, h);
 
-    bias = createVector(1.0, 1.0);
+    bias = createVector(biasStep, biasStep);
     dirLftUp = createVector(-1, -1);
     dirCtrUp = createVector(0, -1);
     dirRgtUp = createVector(1, -1);
@@ -50,6 +55,7 @@ setup = () => {
     dirLftDn = createVector(-1, 1);
     dirCtrDn = createVector(0, 1);
     dirRgtDn = createVector(1, 1);
+
     resetBias();
     updateBias(bias);
 
@@ -67,22 +73,22 @@ setup = () => {
     }
 }
 
+//p5 draw loop. This is called every frame
 draw = () => {
 
-    background(50);
+    background(200);
 
     paintCheck();
 
     updateGrid();
     drawPixels();
     step();
-
 }
 
+//initialize grids
 initGrids = (w, h) => {
     
-    console.log('initGrids');
-    
+    //const gridWidth = w - uiWidth;
     for(let x = 0; x < w; x++)
     {
         gridNow[x] = [];
@@ -96,6 +102,7 @@ initGrids = (w, h) => {
     }
 }
 
+//update future grid
 updateGrid = () => {
 
     for(let x = 0; x < w; x++)
@@ -112,6 +119,7 @@ updateGrid = () => {
     }
 }
 
+//ye olde gray scot model
 grayScott = (cell, delta, laplace, getAB, reaction, feedKill) => {
     
     const v = getAB(cell);
@@ -125,6 +133,7 @@ grayScott = (cell, delta, laplace, getAB, reaction, feedKill) => {
     return v + stepScale;
 }
 
+//laplace function for feed values
 laplaceA = (x, y, f) => {
     
     left = (x + w - 1) % w;
@@ -146,6 +155,7 @@ laplaceA = (x, y, f) => {
     return v;
 }
 
+//laplace function for kill values
 //laplaceB weights should be mirrored to laplaceA
 laplaceB = (x, y, f) => {
     
@@ -168,6 +178,7 @@ laplaceB = (x, y, f) => {
     return v;
 }
 
+//update bias vector and calculate new bias weights
 updateBias = (delta) => {
 
     bias = p5.Vector.add(bias, delta);
@@ -175,6 +186,7 @@ updateBias = (delta) => {
     calcBias(bias);
 }
 
+//reset bias weights
 resetBias = () => {
     weightLftUp = weightDiagonal;
     weightCtrUp = weightOrtho;
@@ -187,6 +199,7 @@ resetBias = () => {
     weightRgtDn = weightDiagonal;
 }
 
+//calculate new bias weights
 calcBias = (bias) => {
 
     resetBias();
@@ -213,6 +226,7 @@ calcBias = (bias) => {
     weightRgtDn /= total;
 }
 
+//calculate individual bias weight
 calcBiasIndiv = (dir, bias, baseWeight) => 
 {
     const sumX = dir.x + bias.x;
@@ -221,13 +235,14 @@ calcBiasIndiv = (dir, bias, baseWeight) =>
     return sqrt((sumX * sumX) + (sumY * sumY)) * baseWeight * 0.25;
 }
 
-getA = (c) => { return c.a; }
-getB = (c) => { return c.b; }
-reactionA = (a, b) => { return a * b * b * -1;}
-reactionB = (a, b) => { return a * b * b;}
-feed = (a) => { return feedRate * (1.0 - a); }
-kill = (b) => { return (killRate + feedRate) * b * -1.0;}
+getA = (c) => { return c.a; } //return cell a value
+getB = (c) => { return c.b; } //return cell b value
+reactionA = (a, b) => { return a * b * b * -1;} //reaction function for cell a value
+reactionB = (a, b) => { return a * b * b;}  //reaction function for cell b value
+feed = (a) => { return feedRate * (1.0 - a); } //feed function
+kill = (b) => { return (killRate + feedRate) * b * -1.0;} //kill function
 
+//draw reaction diffusion grid
 drawPixels = () => {
     loadPixels();
 
@@ -235,9 +250,10 @@ drawPixels = () => {
     {
         for(y = 0; y < h; y++)
         {
-            const index = (x + y * w) * 4;
+            const index = (uiWidth + x + y * totalWidth) * 4;
+            //const index = (uiWidth + x + y * w) * 4;
             const cell = gridNext[x][y];
-            const value = constrain(floor((cell.a - cell.b) * 255.0), 0, 255.0);
+            const value = constrain(floor((cell.a - cell.b) * 255.0), 0, 200);
 
             pixels[index + 0] = value; //r
             pixels[index + 1] = value; //g
@@ -249,26 +265,26 @@ drawPixels = () => {
     updatePixels();
 }
 
+//replace current grid with future grid
 step = () => {
     const toDrawOver = gridNow;
     gridNow = gridNext;
     gridNext = toDrawOver;
 }
 
+//checks for paint input
 paintCheck = () => {
-
-    if(!mouseIsPressed) return;
-
-    //console.log('paint!');
-
-    paint(mouseX, mouseY, paintRangeScalar);
+    if(mouseIsPressed) paint(mouseX, mouseY, paintRangeScalar);
 }
 
+//applies paint input
 paint = (mX, mY, rangeScalar) => {
 
-    const dim = w;
+    let dim = w;
     if(dim > h) dim = h;
     
+    mX -= uiWidth;
+
     const radius = floor(dim * rangeScalar * 0.5);
     let x0 = floor(mX - radius);
     let x1 = floor(mX + radius);
@@ -305,6 +321,7 @@ paint = (mX, mY, rangeScalar) => {
 
 }
 
+//cell class
 class Cell {
     constructor(x, y, a, b)
     {
@@ -321,7 +338,10 @@ class Cell {
     } 
 }
 
-const biasStep = 1;
+//pick up here! Build out bias vector UI
+
+//TEMP: keyboard bias input for testing
+const biasStep = 0.1;
 function keyPressed() {
     if(key == 'w') updateBias(createVector(0, -biasStep));
     if(key == 'a') updateBias(createVector(-biasStep, 0));
