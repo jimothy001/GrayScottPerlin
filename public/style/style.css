@@ -1,0 +1,23 @@
+body {
+    font-family: 'consolas';
+    background-color: white;
+    color: black;
+    /* padding:25%; */
+}
+
+/* main {
+    margin: auto;
+} */
+
+/* #p5Canvas {
+    margin: auto;
+} */
+
+/* #mySlider {
+    position: relative;
+} */
+
+input {
+    background-color: white;
+    color:black
+}
