@@ -14,12 +14,12 @@ const weightOrtho = 0.2; //base weight for cell ortho neighbors
 const weightDiagonal = 0.05; //base weight for cell diagonal neighbors
 const deltaA = 1.0; //base speed for A
 const deltaB = 0.5; //base speed for B
-let feedRate = 0.029; //0.025; //0.0w55;
-let killRate = 0.057; //0.06; //0.062; 
+let feedRate = 0.018; //0.025; //0.0w55;
+let killRate = 0.051; //0.06; //0.062; 
 let timeScalar = 1.0; //speed dampener
 let paintRangeScalar = 0.1; //paint brush radius
-let noiseScalar = 0.005;
-let vecScalar = 0.03;
+let noiseScalar = 0.008;
+let vecScalar = 0.04;
 
 feedKillPresets = {
     "mazes": {feed: 0.029, kill: 0.057},

@@ -205,6 +205,8 @@ initUI = () => {
     sliderPaintRangeScalar.size(sliderWidth);
     dropDownFeedKill.size(sliderWidth);
     buttonReset.size(sliderWidth);
+
+    dropDownFeedKill.value("spots and loops");
 }
 
 getCellAvg = (startX, endX, startY, endY) => 
@@ -331,8 +333,11 @@ updateGrid = () => {
         {
             const cellNow = gridNow[x][y];
             const cellNext = gridNext[x][y];
-            const aNext = grayScott(cellNow, cellNow.a, deltaA, laplaceA, reactionA, feed);
-            const bNext = grayScott(cellNow, cellNow.b, deltaB, laplaceB, reactionB, kill);
+            let aNext = grayScott(cellNow, cellNow.a, deltaA, laplaceA, reactionA, feed);
+            let bNext = grayScott(cellNow, cellNow.b, deltaB, laplaceB, reactionB, kill);
+
+            // const total = aNext + bNext;
+            // if(debug && aNext != 0 && bNext != 0) console.log(total);
 
             cellNext.setAB(aNext, bNext);
         }
@@ -554,13 +559,8 @@ paint = (mX, mY, rangeScalar, paintOrErase) => {
 
 }
 
-// //pick up here! Build out bias vector UI
-
-// //TEMP: keyboard bias input for testing
-// const biasStep = 0.1;
-// function keyPressed() {
-//     if(key == 'w') updateBias(createVector(0, -biasStep));
-//     if(key == 'a') updateBias(createVector(-biasStep, 0));
-//     if(key == 's') updateBias(createVector(0, biasStep));
-//     if(key == 'd') updateBias(createVector(biasStep, 0));
+// let debug = false;
+// function keyPressed(){
+//     if(key == 'd') debug = true;
+//     else debug = false;
 // }
