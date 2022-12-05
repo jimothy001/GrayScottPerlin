@@ -73,6 +73,7 @@ draw = () => {
 
     drawUILabels();
     drawVecGrid();
+    drawVecGridEnds();
     drawPaintRadius();
 }
 
@@ -458,7 +459,7 @@ drawUILabels = () => {
 
 drawVecGrid = () => {
 
-    stroke(0);
+    stroke(100);
     //line(0, 0, mouseX, mouseY);
 
     for(let xStep = 0; xStep < gridVec.length; xStep++)
@@ -478,6 +479,32 @@ drawVecGrid = () => {
             const dY = vec.y * vecStep * vecScalar * 10;
 
             line(xCtr - dX, yCtr - dY, xCtr + dX, yCtr + dY); 
+        }
+    }
+}
+
+drawVecGridEnds = () => {
+
+    stroke(0);
+    //line(0, 0, mouseX, mouseY);
+
+    for(let xStep = 0; xStep < gridVec.length; xStep++)
+    {
+        const xCtr = uiWidth + (xStep * vecStep) + (vecStep * 0.5);
+
+        //console.log(xCtr);
+
+        for(let yStep = 0; yStep < gridVec[xStep].length; yStep++)
+        {
+            const yCtr = (yStep * vecStep) + (vecStep * 0.5);
+            
+            //if(xStep == 0) console.log(xCtr + ", " + yCtr);
+            
+            const vec = gridVec[xStep][yStep];
+            const dX = vec.x * vecStep * vecScalar * 10;
+            const dY = vec.y * vecStep * vecScalar * 10;
+
+            line(xCtr + dX * 0.8, yCtr + dY * 0.8, xCtr + dX, yCtr + dY); 
         }
     }
 }
