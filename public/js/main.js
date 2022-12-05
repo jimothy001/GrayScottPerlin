@@ -43,7 +43,7 @@ draw = () => {
 
     drawUILabels();
     drawVecGrid();
-    drawVecGridEnds();
+    //drawVecGridEnds();
     drawPaintRadius();
 }
 

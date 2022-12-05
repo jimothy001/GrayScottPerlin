@@ -79,7 +79,7 @@ class Cell {
         }
         this.setWeights(noiseX, noiseY, noiseScalar);
 
-        //
+        //scales noise weights
         this.setWeightScalar = (scalar) =>
         {
             this.setWeights(this.noiseX, this.noiseY, scalar);
