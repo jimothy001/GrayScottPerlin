@@ -18,15 +18,15 @@ An outstanding explainer for reaction diffusion can be found here: http://karlsi
 
 The reaction diffusion equations use 2D Laplacian functions that describe diffusion behaviors for chemicals A and B across a 2D array. They are convolutional  operations, insofar as the state of each cell is based on its neighbors. Weights are symmetrical and add up to 1.
 
-Image below illustrates 2d Laplacian operations for reaction diffusion, where:
+*Image below illustrates basic 2d Laplacian operations for reaction diffusion, where:
 
-a = cell value of chemical A
+*a = cell value of chemical A*
 
-b = cell value of chemical B
+*b = cell value of chemical B
 
-c = weighted influence of neighbor cell value A or B
+*c = weighted influence of neighbor cell value A or B
 
-w = weight of neighbor cell value A or B influence. Orthogonal neighbors are weighted at 0.2 and diagonal neighbors are weighted at 0.05.
+*w = weight of neighbor cell value A or B influence. Orthogonal neighbors are weighted at 0.2 and diagonal neighbors are weighted at 0.05.
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/pngs/convolutionBasic.png)
 
@@ -40,25 +40,25 @@ The resulting modified weights for chemicals A and B must be normalized so that 
 
 NOTE: Perlin noise bias is generated and applied at the level of the reaction diffusion cell, but the linework that visually represents it in the app is averaged within a bin and drawn at a larger scale for human readability.
 
-Image below illustrates 2d biased Laplacian operations for reaction diffusion, where:
+*Image below illustrates 2d biased Laplacian operations for reaction diffusion, where:
 
-a = cell value of chemical A
+*a = cell value of chemical A
 
-b = cell value of chemical B
+*b = cell value of chemical B
 
-c = weighted influence of neighbor cell value A or B
+*c = weighted influence of neighbor cell value A or B
 
-Wa = biased weight of neighbor cell value A influence
+*Wa = biased weight of neighbor cell value A influence
 
-Wb = biased weight of neighbor cell value B influence
+*Wb = biased weight of neighbor cell value B influence
 
-w = base weight of neighbor cell value A or B influence. Orthogonal neighbors are weighted at 0.2 and diagonal neighbors are weighted at 0.05.
+*w = base weight of neighbor cell value A or B influence. Orthogonal neighbors are weighted at 0.2 and diagonal neighbors are weighted at 0.05.
 
-d = direction to neighbor cell from center cell where a and b values are being calculated
+*d = direction to neighbor cell from center cell where a and b values are being calculated
 
-k = local bias vector
+*k = local bias vector
 
-s = arbitrary bias scalar, which can be thought of as current strength
+*s = arbitrary bias scalar, which can be thought of as current strength
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/pngs/convolutionBiased.png)
 
