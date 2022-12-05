@@ -2,7 +2,7 @@
 
 ### A running instance of this experiment can be found here: https://gray-scott-perlin.herokuapp.com/
 
-This is an experiment to see what happens when the Gray Scott model of reaction diffusion is subjected to directional biases (currents), as produced by a vector field.
+This is an experiment to see what happens when the Gray Scott model of reaction diffusion is subjected to directional biases (currents), as produced by a perlin noise vector field.
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/gifs/singularity.gif)
 
