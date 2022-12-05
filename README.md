@@ -20,13 +20,15 @@ The reaction diffusion equations use 2D Laplacian functions that describe diffus
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/pngs/convolutionBasic.png)
 
-A local bias can be applied to diffusion functions by modifying the base weights with:
+A local bias (Perlin noise) can be applied to diffusion functions by modifying the base weights with:
 
 For chemical A: the magnitude of a vector that is the sum of the bias vector and neighbor direction vector, multiplied by the base weight and an arbitrary scalar.
 
 For chemical B: the magnitude of a vector that is the difference between the bias vector and neighbor direction vector, multiplied by the base weight and an arbitrary scalar. This is effectively a mirrored version of the chemical A weights.
 
 The resulting modified weights for chemicals A and B must be normalized so that they add up to 1.
+
+NOTE: Perlin noise bias is generated and applied at the level of the reaction diffusion cell, but the linework that visually represents it in the app is averaged within a bin and drawn at a larger scale for human readability.
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/pngs/convolutionBiased.png)
 
