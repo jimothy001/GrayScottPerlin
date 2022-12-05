@@ -18,7 +18,7 @@ An outstanding explainer for reaction diffusion can be found here: http://karlsi
 
 The reaction diffusion equations use 2D Laplacian functions that describe diffusion behaviors for chemicals A and B across a 2D array. They are convolutional  operations, insofar as the state of each cell is based on its neighbors. Weights are symmetrical and add up to 1.
 
-2d Laplacian operations for reaction diffusion, where:
+Image below illustrates 2d Laplacian operations for reaction diffusion, where:
 
 a = cell value of chemical A
 
@@ -40,7 +40,7 @@ The resulting modified weights for chemicals A and B must be normalized so that 
 
 NOTE: Perlin noise bias is generated and applied at the level of the reaction diffusion cell, but the linework that visually represents it in the app is averaged within a bin and drawn at a larger scale for human readability.
 
-2d biased Laplacian operations for reaction diffusion, where:
+Image below illustrates 2d biased Laplacian operations for reaction diffusion, where:
 
 a = cell value of chemical A
 
