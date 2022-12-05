@@ -14,15 +14,15 @@ The effect of the vector field is most apparent at vector singularities.
 
 An explainer for reaction diffusion can be found here: http://karlsims.com/rd.html
 
-The reaction diffusion equations use 2D Laplacian functions that describe diffusion behaviors for chemicals A and B across a 2D array. They are convotional operations, insofar as they influence the state of a cell based on its neighbors. Weights are symmetrical and add up to 1.
+The reaction diffusion equations use 2D Laplacian functions that describe diffusion behaviors for chemicals A and B across a 2D array. They are convolutional  operations, insofar as they influence the state of a cell based on its neighbors. Weights are symmetrical and add up to 1.
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/pngs/convolutionBasic.png)
 
 A local bias can be applied to diffusion functions by modifying the base weights with:
 
-For chemical A, the magnitude of a vector that is the sum of the bias vector and neighbor direction vector, multiplied by the base weight and an arbitrary scalar.
+For chemical A: the magnitude of a vector that is the sum of the bias vector and neighbor direction vector, multiplied by the base weight and an arbitrary scalar.
 
-For chemical B, the magnitude of a vector that is the difference between the bias vector and neighbor direction vector, multiplied by the base weight and an arbitrary scalar. This is effectively a mirrored version of the chemical A weights.
+For chemical B: the magnitude of a vector that is the difference between the bias vector and neighbor direction vector, multiplied by the base weight and an arbitrary scalar. This is effectively a mirrored version of the chemical A weights.
 
 The resulting modified weights for chemicals A and B must be normalized so that they add up to 1.
 
