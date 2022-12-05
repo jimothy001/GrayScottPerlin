@@ -4,6 +4,9 @@ This is an experiment to see what happens when the Gray Scott model of reaction 
 
 ### A running instance of this experiment can be found here: https://gray-scott-perlin.herokuapp.com/
 
+
+
+
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/gifs/singularity.gif)
 
 The effect of the vector field is most apparent at vector singularities.
