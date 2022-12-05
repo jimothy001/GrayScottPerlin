@@ -35,5 +35,9 @@ In addition to 'painting' more solution B into solution A, you are able to exper
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/gifs/paint.gif)
 
 ### Acknowledgements
+
+Karl Sims, Reaction Diffusion Tutorial: http://karlsims.com/rd.html
+
 Daniel Shiffman, the Coding Train: https://youtu.be/BV9ny785UNc
+
 Pmneila, jsexp: https://github.com/pmneila/jsexp
