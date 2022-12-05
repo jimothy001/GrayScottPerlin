@@ -1,6 +1,6 @@
 # GrayScott + Perlin Noise
 
-This is an experiment to see what happens when reaction diffusion is subjected to directional biases (currents), as produced by a vector field.
+This is an experiment to see what happens when the Gray Scott model of reaction diffusion is subjected to directional biases (currents), as produced by a vector field.
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/gifs/singularity.gif)
 
@@ -10,11 +10,11 @@ The effect of the vector field is most apparent at vector singularities.
 
 ### Reaction Diffusion With Local Biases
 
-[2-3 sentence explanation for RD and its applications]
+Reaction diffusion is a simulation of how two chemicals react to each other and diffuse when combined. 
 
-An explainer for reaction diffusion can be found here: http://karlsims.com/rd.html
+An outstanding explainer for reaction diffusion can be found here: http://karlsims.com/rd.html
 
-The reaction diffusion equations use 2D Laplacian functions that describe diffusion behaviors for chemicals A and B across a 2D array. They are convolutional  operations, insofar as they influence the state of a cell based on its neighbors. Weights are symmetrical and add up to 1.
+The reaction diffusion equations use 2D Laplacian functions that describe diffusion behaviors for chemicals A and B across a 2D array. They are convolutional  operations, insofar as the state of each cell is based on its neighbors. Weights are symmetrical and add up to 1.
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/pngs/convolutionBasic.png)
 
