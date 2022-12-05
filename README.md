@@ -6,7 +6,7 @@ This is an experiment to see what happens when the Gray Scott model of reaction 
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/gifs/singularity.gif)
 
-The effect of the vector field is most apparent at vector singularities.
+The effect of the noise is most apparent at tight vector circulation points.
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/gifs/singularityZoom.gif)
 
