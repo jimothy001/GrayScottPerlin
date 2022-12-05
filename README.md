@@ -26,7 +26,7 @@ b = cell value of chemical B
 
 c = weighted influence of neighbor cell value A or B
 
-w = weight of neighbor cell value A or B influence. Orthogonal neighbors are weighted at 0.2 and diagonal neighbors are weighted at 0.05;
+w = weight of neighbor cell value A or B influence. Orthogonal neighbors are weighted at 0.2 and diagonal neighbors are weighted at 0.05.
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/pngs/convolutionBasic.png)
 
@@ -52,11 +52,11 @@ Wa = biased weight of neighbor cell value A influence
 
 Wb = biased weight of neighbor cell value B influence
 
-w = base weight of neighbor cell value A or B influence
+w = base weight of neighbor cell value A or B influence. Orthogonal neighbors are weighted at 0.2 and diagonal neighbors are weighted at 0.05.
 
 d = direction to neighbor cell from center cell where a and b values are being calculated
 
-k = bias vector
+k = local bias vector
 
 s = arbitrary bias scalar, which can be thought of as current strength
 
