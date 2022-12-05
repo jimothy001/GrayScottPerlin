@@ -1,12 +1,10 @@
-//const { text } = require("express");
+const sliderWidth = uiWidth * 0.8; //ui element width
+const sliderOffsetX = uiWidth * 0.1; //ui position x offset
+const titleOffsetY = h * 0.17; //ui title y offset
+const sliderStepY = h * 0.1;//ui element position y step 
+const sliderStep = 0.001;//ui slider value step
 
-const sliderWidth = uiWidth * 0.8;
-const sliderOffsetX = uiWidth * 0.1;
-const titleOffsetY = h * 0.17;
-const sliderStepY = h * 0.1;
-const sliderStep = 0.001;
-
-let canvas = null;
+let canvas = null; //canvas
 let sliderFeedRate = null;
 let sliderKillRate = null;
 let sliderTimeScalar = null;
@@ -18,55 +16,27 @@ let buttonReset = null;
 
 //p5 setup. This is called once at the beginning of runtime
 setup = () => {
-    //console.log("setup!");
-    //setAttributes('willReadFrequently', true);
 
     const e = createCanvas(totalWidth, h);
     canvas = e.canvas;
 
+    //for some reason neither of these seem to affect related console warning.
     drawingContext.willReadFrequently = true;
     setAttributes('2d', 'willReadFrequently', true);
 
-    // e.canvas.willReadFrequently = true;
-    // e.drawingContext.willReadFrequently = true;
-    // //e.drawingContext.getContext('2d', { willReadFrequently: true });
-    // e.canvas.getContext('2d', { willReadFrequently: true });
-    //console.log(drawingContext);
-    // setAttributes('willReadFrequently', true);
-
     pixelDensity(1);
-    
-    //bias = createVector(biasStep, biasStep);
     initDir();
-
     initGrids(w, h);
-
     initUI();
-
     setGridCircle(0.5);
-
-    // const halfW = round(w * 0.5);
-    // const halfH = round(h * 0.5);
-    // const offset = round(w * 0.1);
-
-    // //temp - make this interactive!
-    // for(let x = halfW - offset; x < halfW + offset; x++)
-    // {
-    //     for(let y = halfH - offset; y < halfH + offset; y++)
-    //     {
-    //         gridNow[x][y].b = 1;
-    //     }
-    // }
 }
 
 //p5 draw loop. This is called every frame
 draw = () => {
 
     background(255);
-    //background(0,0,0,0);
 
-    paintCheck();
-    
+    paintCheck();    
     updateGrid();    
     drawPixels();
     step();
@@ -77,6 +47,7 @@ draw = () => {
     drawPaintRadius();
 }
 
+//initialize local cell neighbor directions
 initDir = () => {
     dirLftUp = createVector(-1, -1);
     dirCtrUp = createVector(0, -1);
@@ -89,26 +60,21 @@ initDir = () => {
     dirRgtDn = createVector(1, 1);
 }
 
-//initialize grids
+//initialize cell and perlin noise (graphic) grids
 initGrids = (w, h) => {
-    
     initCellGrids(w, h);
     initVecGrid(w, h);
 }
 
+//initializes cell grid
 initCellGrids = (w, h) => {
-
-    //const gridWidth = w - uiWidth;
     for(let x = 0; x < w; x++)
     {
-        //gridNoise[x] = [];
         gridNow[x] = [];
         gridNext[x] = [];
     
         for(let y = 0; y < h; y++)
         {
-            //const noiseY = noise(map(y, 0, h, 0, noiseScalar));
-            
             const mNX = gen2dUnitNoise((w + x) * noiseScalar, y * noiseScalar);
             const mNY = gen2dUnitNoise(x * noiseScalar, (h + y) * noiseScalar);
     
@@ -118,99 +84,27 @@ initCellGrids = (w, h) => {
     }
 }
 
+//initializes perlin noise vector grid.
+//noise is generated and cached at the level of the RD grid square to regularize resolution of information
+//noise is averaged and drawn at a larger scale for readability
 initVecGrid = (w, h) => {
-// const vecGridDimX = w / vecStep;
-    // const vecGridDimY = h / vecStep;
     for(let x = 0; x < w; x += vecStep)
     {
         const vecX = x / vecStep;
-        //const avgX = getAvg(noiseX, vecX, vecX + vecStep);
         gridVec[vecX] = [];
         
         for(let y = 0; y < h; y += vecStep)
         {
             const vecY = y / vecStep;
-            gridVec[vecX][vecY] = getCellAvg(x, x + vecStep, y, y + vecStep);
+            gridVec[vecX][vecY] = getCellAvgNoise(x, x + vecStep, y, y + vecStep);
         }
     }
 }
 
-initUI = () => {
-
-    sliderNoiseScalar = createSlider(0.001, 0.01, noiseScalar, sliderStep);
-    sliderVecScalar = createSlider(0, 0.05, vecScalar, sliderStep);
-    sliderFeedRate = createSlider(0.01, 0.08, feedRate, sliderStep);
-    sliderKillRate = createSlider(0.01, 0.08, killRate, sliderStep);
-    sliderTimeScalar = createSlider(0.1, 1.1, timeScalar, sliderStep);
-    sliderPaintRangeScalar = createSlider(0.01, 0.25, paintRangeScalar, sliderStep);
-    dropDownFeedKill = createSelect();
-    dropDownFeedKill.option("mazes");
-    dropDownFeedKill.option("solitions");
-    dropDownFeedKill.option("pulsating solitions");
-    dropDownFeedKill.option("worms");
-    dropDownFeedKill.option("holes");
-    dropDownFeedKill.option("chaos");
-    dropDownFeedKill.option("chaos and holes (by clem)");
-    dropDownFeedKill.option("moving spots");
-    dropDownFeedKill.option("spots and loops");
-    dropDownFeedKill.option("waves");
-    dropDownFeedKill.option("the u-skate world");
-    buttonReset = createButton('reset');
-
-
-    // sliderNoiseScalar.parent(document.getElementsByTagName('main')[0]);
-    // sliderNoiseScalar.addClass('mySlider');
-    // console.log(sliderNoiseScalar);
-
-    sliderNoiseScalar.mouseReleased(() => {
-        noiseScalar = sliderNoiseScalar.value();
-        updateCellNoise(w, h);
-    });
-    sliderVecScalar.mouseReleased(() => {
-        vecScalar = sliderVecScalar.value();
-        updateCellNoiseVecScalar(vecScalar);
-    });
-    sliderFeedRate.mouseReleased(() => {feedRate = sliderFeedRate.value();});
-    sliderKillRate.mouseReleased(() => {killRate = sliderKillRate.value();});
-    sliderTimeScalar.mouseReleased(() => {timeScalar = sliderTimeScalar.value();});  
-    sliderPaintRangeScalar.mouseReleased(() => {paintRangeScalar = sliderPaintRangeScalar.value();});
-    dropDownFeedKill.changed(() => {
-        const presetName = dropDownFeedKill.value();
-        const preset = feedKillPresets[presetName];
-        feedRate = preset.feed;
-        killRate = preset.kill;
-        sliderFeedRate.value(feedRate);
-        sliderKillRate.value(killRate);
-
-        //TODO: clear and reset grid
-    });
-    buttonReset.mouseReleased(() => {resetGrid();});
-
-    // sliderNoiseScalar.parent(canvas);
-    // sliderNoiseScalar.position(sliderOffsetX, sliderStepY, 'relative');
-
-    sliderNoiseScalar.position(sliderOffsetX, titleOffsetY + sliderStepY);
-    sliderVecScalar.position(sliderOffsetX, titleOffsetY + sliderStepY * 2);
-    sliderFeedRate.position(sliderOffsetX, titleOffsetY + sliderStepY * 3);
-    sliderKillRate.position(sliderOffsetX, titleOffsetY + sliderStepY * 4);
-    sliderTimeScalar.position(sliderOffsetX, titleOffsetY + sliderStepY * 5);
-    sliderPaintRangeScalar.position(sliderOffsetX, titleOffsetY + sliderStepY * 6);
-    dropDownFeedKill.position(sliderOffsetX, titleOffsetY + sliderStepY * 7.15);
-    buttonReset.position(sliderOffsetX, titleOffsetY + sliderStepY * 8);
-
-    sliderNoiseScalar.size(sliderWidth);
-    sliderVecScalar.size(sliderWidth);
-    sliderFeedRate.size(sliderWidth);
-    sliderKillRate.size(sliderWidth);
-    sliderTimeScalar.size(sliderWidth);
-    sliderPaintRangeScalar.size(sliderWidth);
-    dropDownFeedKill.size(sliderWidth);
-    buttonReset.size(sliderWidth);
-
-    dropDownFeedKill.value("spots and loops");
-}
-
-getCellAvg = (startX, endX, startY, endY) => 
+//returns average noise vector for a given region of the RD grid.
+//noise is generated and cached at the level of the RD grid square to regularize resolution of information
+//noise is averaged and drawn at a larger scale for readability
+getCellAvgNoise = (startX, endX, startY, endY) => 
 {
     let avgX = 0;
     let avgY = 0
@@ -236,6 +130,7 @@ getCellAvg = (startX, endX, startY, endY) =>
     return vec;
 }
 
+//returns average of value array
 getAvg = (arr, start, end) => 
 {
     let avg = 0;
@@ -249,21 +144,87 @@ getAvg = (arr, start, end) =>
     return avg / divisor;
 }
 
+//returns single 2d noise value based on x and y position
 gen2dUnitNoise = (x, y) => {
     return map(noise(x, y), 0, 1, -1, 1);
 }
 
+//(temp) initializes P5 UI elements
+initUI = () => {
+
+    sliderNoiseScalar = createSlider(0.001, 0.01, noiseScalar, sliderStep);
+    sliderVecScalar = createSlider(0, 0.05, vecScalar, sliderStep);
+    sliderFeedRate = createSlider(0.01, 0.08, feedRate, sliderStep);
+    sliderKillRate = createSlider(0.01, 0.08, killRate, sliderStep);
+    sliderTimeScalar = createSlider(0.1, 1.1, timeScalar, sliderStep);
+    sliderPaintRangeScalar = createSlider(0.01, 0.25, paintRangeScalar, sliderStep);
+    dropDownFeedKill = createSelect();
+    dropDownFeedKill.option("mazes");
+    dropDownFeedKill.option("solitions");
+    dropDownFeedKill.option("pulsating solitions");
+    dropDownFeedKill.option("worms");
+    dropDownFeedKill.option("holes");
+    dropDownFeedKill.option("chaos");
+    dropDownFeedKill.option("chaos and holes (by clem)");
+    dropDownFeedKill.option("moving spots");
+    dropDownFeedKill.option("spots and loops");
+    dropDownFeedKill.option("waves");
+    dropDownFeedKill.option("the u-skate world");
+    buttonReset = createButton('reset');
+
+    sliderNoiseScalar.mouseReleased(() => {
+        noiseScalar = sliderNoiseScalar.value();
+        updateCellNoise(w, h);
+    });
+    sliderVecScalar.mouseReleased(() => {
+        vecScalar = sliderVecScalar.value();
+        updateCellNoiseVecScalar(vecScalar);
+    });
+    sliderFeedRate.mouseReleased(() => {feedRate = sliderFeedRate.value();});
+    sliderKillRate.mouseReleased(() => {killRate = sliderKillRate.value();});
+    sliderTimeScalar.mouseReleased(() => {timeScalar = sliderTimeScalar.value();});  
+    sliderPaintRangeScalar.mouseReleased(() => {paintRangeScalar = sliderPaintRangeScalar.value();});
+    dropDownFeedKill.changed(() => {
+        const presetName = dropDownFeedKill.value();
+        const preset = feedKillPresets[presetName];
+        feedRate = preset.feed;
+        killRate = preset.kill;
+        sliderFeedRate.value(feedRate);
+        sliderKillRate.value(killRate);
+    });
+    buttonReset.mouseReleased(() => {resetGrid();});
+
+    sliderNoiseScalar.position(sliderOffsetX, titleOffsetY + sliderStepY);
+    sliderVecScalar.position(sliderOffsetX, titleOffsetY + sliderStepY * 2);
+    sliderFeedRate.position(sliderOffsetX, titleOffsetY + sliderStepY * 3);
+    sliderKillRate.position(sliderOffsetX, titleOffsetY + sliderStepY * 4);
+    sliderTimeScalar.position(sliderOffsetX, titleOffsetY + sliderStepY * 5);
+    sliderPaintRangeScalar.position(sliderOffsetX, titleOffsetY + sliderStepY * 6);
+    dropDownFeedKill.position(sliderOffsetX, titleOffsetY + sliderStepY * 7.15);
+    buttonReset.position(sliderOffsetX, titleOffsetY + sliderStepY * 8);
+
+    sliderNoiseScalar.size(sliderWidth);
+    sliderVecScalar.size(sliderWidth);
+    sliderFeedRate.size(sliderWidth);
+    sliderKillRate.size(sliderWidth);
+    sliderTimeScalar.size(sliderWidth);
+    sliderPaintRangeScalar.size(sliderWidth);
+    dropDownFeedKill.size(sliderWidth);
+    buttonReset.size(sliderWidth);
+
+    dropDownFeedKill.value("spots and loops");
+}
+
+//updates cell perlin noise vector directions.
+//this occurs at the level of the RD grid square.
 updateCellNoise = (w, h) => {
 
     for(let x = 0; x < w; x++)
     {
         for(let y = 0; y < h; y++)
         {
-            //const noiseY = noise(map(y, 0, h, 0, noiseScalar));
-            
             const mNX = gen2dUnitNoise((w + x) * noiseScalar, y * noiseScalar);
             const mNY = gen2dUnitNoise(x * noiseScalar, (h + y) * noiseScalar);
-    
             gridNow[x][y].setWeights(mNX, mNY, vecScalar);
             gridNext[x][y].setWeights(mNX, mNY, vecScalar);
         }
@@ -272,6 +233,8 @@ updateCellNoise = (w, h) => {
     initVecGrid(w, h);
 }
 
+//updates perlin vector magnitudes.
+//this occurs at the level of the RD grid square.
 updateCellNoiseVecScalar = (w, h) => {
 
     for(let x = 0; x < w; x++)
@@ -284,11 +247,13 @@ updateCellNoiseVecScalar = (w, h) => {
     }
 }
 
+//resets RD grid to its original state
 resetGrid = () => {
     clearGrid();
     setGridCircle(0.5);
 }
 
+//clears RD grid of chemical B
 clearGrid = () => {
     for(let x = 0; x < w; x++)
     {
@@ -300,6 +265,7 @@ clearGrid = () => {
     }
 }
 
+//sets circle of chemical b in RD grid
 setGridCircle = (sizeRatio) => {
 
     const xStart = round((w * 0.5) - (w * sizeRatio * 0.5));
@@ -336,9 +302,6 @@ updateGrid = () => {
             const cellNext = gridNext[x][y];
             let aNext = grayScott(cellNow, cellNow.a, deltaA, laplaceA, reactionA, feed);
             let bNext = grayScott(cellNow, cellNow.b, deltaB, laplaceB, reactionB, kill);
-
-            // const total = aNext + bNext;
-            // if(debug && aNext != 0 && bNext != 0) console.log(total);
 
             cellNext.setAB(aNext, bNext);
         }
@@ -382,7 +345,7 @@ laplaceA = (cell) => {
 }
 
 //laplace function for kill values
-//laplaceB weights should be mirrored to laplaceA
+//laplaceB weights should be mirrored to laplaceA because they are based on the difference between the local bias vector and the local neighbor direction vector
 laplaceB = (cell) => {
     
     const x = cell.x;
@@ -406,8 +369,7 @@ laplaceB = (cell) => {
     return v;
 }
 
-// getA = (c) => { return c.a; } //return cell a value
-// getB = (c) => { return c.b; } //return cell b value
+//I had to break these parts of the RD equations down to understand them better
 reactionA = (a, b) => { return a * b * b * -1;} //reaction function for cell a value
 reactionB = (a, b) => { return a * b * b;}  //reaction function for cell b value
 feed = (a) => { return feedRate * (1.0 - a); } //feed function
@@ -422,7 +384,6 @@ drawPixels = () => {
         for(y = 0; y < h; y++)
         {
             const index = (uiWidth + x + y * totalWidth) * 4;
-            //const index = (uiWidth + x + y * w) * 4;
             const cell = gridNext[x][y];
             const value = constrain(floor((cell.a - cell.b) * 255.0), 0, 255);
 
@@ -436,6 +397,7 @@ drawPixels = () => {
     updatePixels();
 }
 
+//draws UI labels
 drawUILabels = () => {
     
     const textYOffset = sliderStepY * 0.25;
@@ -457,23 +419,18 @@ drawUILabels = () => {
     text("feed/kill presets", sliderOffsetX, titleOffsetY + sliderStepY * 7 - textYOffset);
 }
 
+//draws vector grid
 drawVecGrid = () => {
 
     stroke(100);
-    //line(0, 0, mouseX, mouseY);
 
     for(let xStep = 0; xStep < gridVec.length; xStep++)
     {
         const xCtr = uiWidth + (xStep * vecStep) + (vecStep * 0.5);
 
-        //console.log(xCtr);
-
         for(let yStep = 0; yStep < gridVec[xStep].length; yStep++)
         {
             const yCtr = (yStep * vecStep) + (vecStep * 0.5);
-            
-            //if(xStep == 0) console.log(xCtr + ", " + yCtr);
-            
             const vec = gridVec[xStep][yStep];
             const dX = vec.x * vecStep * vecScalar * 10;
             const dY = vec.y * vecStep * vecScalar * 10;
@@ -483,23 +440,18 @@ drawVecGrid = () => {
     }
 }
 
+//draws vector grid ends to indicate directionality
 drawVecGridEnds = () => {
 
     stroke(0);
-    //line(0, 0, mouseX, mouseY);
 
     for(let xStep = 0; xStep < gridVec.length; xStep++)
     {
         const xCtr = uiWidth + (xStep * vecStep) + (vecStep * 0.5);
 
-        //console.log(xCtr);
-
         for(let yStep = 0; yStep < gridVec[xStep].length; yStep++)
         {
             const yCtr = (yStep * vecStep) + (vecStep * 0.5);
-            
-            //if(xStep == 0) console.log(xCtr + ", " + yCtr);
-            
             const vec = gridVec[xStep][yStep];
             const dX = vec.x * vecStep * vecScalar * 10;
             const dY = vec.y * vecStep * vecScalar * 10;
@@ -509,7 +461,9 @@ drawVecGridEnds = () => {
     }
 }
 
+//draws paint radius UI element at mouse cursor position
 drawPaintRadius = () =>{
+
     if(mouseX > uiWidth && mouseX < totalWidth && mouseY > 0 && mouseY < h) 
     {
         noFill();
@@ -540,8 +494,6 @@ paint = (mX, mY, rangeScalar, paintOrErase) => {
     let dim = w;
     if(dim > h) dim = h;
 
-    //console.log(mX + ", " + mY);
-
     mX -= uiWidth;
 
     //check if the mouse is completely off the canvas in terms of radius
@@ -553,15 +505,10 @@ paint = (mX, mY, rangeScalar, paintOrErase) => {
     let y0 = floor(mY - radius);
     let y1 = floor(mY + radius);
 
-    // //check if the mouse is completely off the canvas in terms of radius
-    // if(x1 < 0 || x0 > w || y1 < 0 || y0 > h) return;
-
     if(x0 < 0) x0 = 0;
     if(x1 > w) x1 = w;
     if(y0 < 0) y0 = 0;
     if(y1 > h) y1 = h;
-
-    //console.log(y0 + ", " + y1);
 
     for(x = x0; x < x1; x++)
     {
@@ -570,12 +517,9 @@ paint = (mX, mY, rangeScalar, paintOrErase) => {
             const d = dist(x, y, mX, mY);
 
             if(d > radius) continue;
-            //else if(d < radius * 0.1) gridNow[x][y].b = 1 * paintOrErase;
             else
             {
                 const vLinear = (radius - d) / radius;
-                //const vPow = vLinear * vLinear * vLinear * 0.25;
-                //const vGaussian = exp(vLinear * vLinear * -1);
                 const vExp = map(exp(vLinear), 0, 10, 0, 1);
                 const v = vExp;
     

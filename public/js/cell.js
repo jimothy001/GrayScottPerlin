@@ -5,7 +5,7 @@ class Cell {
         this.x = x;
         this.y = y;
         
-
+        //sets chemical A and B values, constrains values to bounds of 0 and 1
         this.setAB = (a, b) =>
         {
             this.a = constrain(a, 0, 1);
@@ -13,6 +13,7 @@ class Cell {
         }
         this.setAB(a, b);
 
+        //resets weights to base ortho (0.2) and diagonal (0.05) values
         this.zeroWeights = () =>
         {
             this.weightLftUp = weightDiagonal;
@@ -36,7 +37,9 @@ class Cell {
             return sqrt((sumX * sumX) + (sumY * sumY)) * baseWeight * scalar;
         }
 
-        //calculate new bias weights
+        //calculate new bias weights. Weights are for Laplacian function for chemical A. 
+        //They can be mirrored when applied to the Laplacian function for chemical B. This reduces the amount of memory required for each cell.
+        //The weights must be normalized to a sum total of 1, or else everything gets crazy.
         this.calcWeights = (biasX, biasY, scalar) => 
         {
             let total = 0;
@@ -44,7 +47,7 @@ class Cell {
             total += this.weightCtrUp = weightOrtho + this.calcBiasIndiv(dirCtrUp, biasX, biasY, weightOrtho, scalar);
             total += this.weightRgtUp = weightDiagonal + this.calcBiasIndiv(dirRgtUp, biasX, biasY, weightDiagonal, scalar);
             total += this.weightLftCr = weightOrtho + this.calcBiasIndiv(dirLftCr, biasX, biasY, weightOrtho, scalar);
-            //total += weightCtrCr = weightReset;
+            //skip center weight because it is only used to reset cell A and B values
             total += this.weightRgtCr = weightOrtho + this.calcBiasIndiv(dirRgtCr, biasX, biasY, weightOrtho, scalar);
             total += this.weightLftDn = weightDiagonal + this.calcBiasIndiv(dirLftDn, biasX, biasY, weightDiagonal, scalar);
             total += this.weightCtrDn = weightOrtho + this.calcBiasIndiv(dirCtrDn, biasX, biasY, weightOrtho, scalar);
@@ -59,10 +62,9 @@ class Cell {
             this.weightLftDn /= total;
             this.weightCtrDn /= total;
             this.weightRgtDn /= total;
-
-            //console.log(weightLftUp);
         }
 
+        //sets noise X and Y weights
         this.setWeights = (noiseX, noiseY, scalar) => 
         {
             this.noiseX = noiseX;
@@ -77,6 +79,7 @@ class Cell {
         }
         this.setWeights(noiseX, noiseY, noiseScalar);
 
+        //
         this.setWeightScalar = (scalar) =>
         {
             this.setWeights(this.noiseX, this.noiseY, scalar);

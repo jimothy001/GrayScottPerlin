@@ -21,6 +21,7 @@ let paintRangeScalar = 0.1; //paint brush radius
 let noiseScalar = 0.008;
 let vecScalar = 0.04;
 
+//presets from https://github.com/pmneila/jsexp
 feedKillPresets = {
     "mazes": {feed: 0.029, kill: 0.057},
     "solitions": {feed: 0.03, kill: 0.062},
