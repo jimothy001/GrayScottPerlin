@@ -20,11 +20,13 @@ The reaction diffusion equations use 2D Laplacian functions that describe diffus
 
 *Image below illustrates basic 2d Laplacian operations for reaction diffusion, where:*
 
-*a = cell value of chemical A*
+*∇<sup>2</sup>A = cell value of chemical A*
 
-*b = cell value of chemical B*
+*∇<sup>2</sup>B = cell value of chemical B*
 
-*c = weighted influence of neighbor cell value A or B*
+*C<sub>A</sub> = weighted influence of neighbor cell value A*
+
+*C<sub>B</sub> = weighted influence of neighbor cell value B*
 
 *w = weight of neighbor cell value A or B influence. Orthogonal neighbors are weighted at 0.2 and diagonal neighbors are weighted at 0.05.*
 
@@ -38,27 +40,31 @@ For chemical B: the magnitude of a vector that is the difference between the bia
 
 The resulting modified weights for chemicals A and B must be normalized so that they add up to 1.
 
+NOTE: Vector Y positive direction is reversed relative to row positive direction in column/row notation.
+
 NOTE: Perlin noise bias is generated and applied at the level of the reaction diffusion cell, but the linework that visually represents it in the app is averaged within a bin and drawn at a larger scale for human readability.
 
 *Image below illustrates 2d biased Laplacian operations for reaction diffusion, where:*
 
-*a = cell value of chemical A*
+*∇<sup>2</sup>A = cell value of chemical A*
 
-*b = cell value of chemical B*
+*∇<sup>2</sup>B = cell value of chemical B*
 
-*c = weighted influence of neighbor cell value A or B*
+*C<sub>A</sub> = weighted influence of neighbor cell value A*
 
-*Wa = biased weight of neighbor cell value A influence*
+*C<sub>B</sub> = weighted influence of neighbor cell value B*
 
-*Wb = biased weight of neighbor cell value B influence*
+*W<sub>A</sub> = biased weight of neighbor cell value A influence*
+
+*W<sub>B</sub> = biased weight of neighbor cell value B influence*
 
 *w = base weight of neighbor cell value A or B influence. Orthogonal neighbors are weighted at 0.2 and diagonal neighbors are weighted at 0.05.*
 
-*d = direction to neighbor cell from center cell where a and b values are being calculated*
+*$\vec{d}$ = direction to neighbor cell from center cell where Laplacian result is being calculated*
 
-*k = local bias vector*
+*$\vec{k}$ = local bias vector*
 
-*s = arbitrary bias scalar, which can be thought of as current strength*
+*s = global arbitrary bias scalar, which can be thought of as current strength*
 
 ![](https://github.com/jimothy001/GrayScottPlus/blob/main/pngs/convolutionBiased.png)
 
