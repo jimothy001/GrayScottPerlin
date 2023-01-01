@@ -1,20 +1,65 @@
+
+
 <!DOCTYPE html>
 <html lang = "en">
     <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" type="text/css" href="style/style.css"/>
         <script src="js/p5.min.js"></script>
-        <script src="js/global.js"></script>
-        <script src="js/cell.js"></script>
+        <!-- <script src="js/global.js"></script> -->
         <script src="js/main.js"></script>
         <title>Gray Scott With Perlin Noise</title>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="container">
+            <h1>Reaction Diffusion in a Perlin Noise Vector Field</h1>
+            <div id="app">
+                <div id="ui">
+                    
+                    <p class="uiLabel">What happens when reaction diffusion is subjected to external forces?</p>
+                    <p></p><br><br>
+                    <p id="noiseScalarText" class="uiLabel">Noise Detail Scalar: 0.008</p>
+                    <input type="range" min="0.001" max="0.01" step="0.0001" value="0.008" id="noiseScalar" class="slider" onchange="sliderUpdate_noiseScalar()">
+                    <p id="vecScalarText" class="uiLabel">Noise Magnitude Scalar: 0.5</p>
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="0.5" id="vecScalar" class="slider" onchange="sliderUpdate_vecScalar()">
+                    <p id="feedScalarText" class="uiLabel">Feed Rate Scalar: 0.025</p>
+                    <input type="range" min="0.01" max="0.08" step="0.001" value="0.029" id="feedScalar" class="slider" onchange="sliderUpdate_feedScalar()">
+                    <p id="killScalarText" class="uiLabel">Kill Rate Scalar: 0.055</p>
+                    <input type="range" min="0.01" max="0.08" step="0.001" value="0.057" id="killScalar" class="slider" onchange="sliderUpdate_killScalar()">
+                    <p id="timeScalarText" class="uiLabel">Time Scalar: 1.0</p>
+                    <input type="range" min="0.0" max="1.0" step="0.001" value="1.0" id="timeScalar" class="slider" onchange="sliderUpdate_timeScalar()">
+                    <p id="paintRangeScalarText" class="uiLabel">Paint Radius: 0.1</p>
+                    <input type="range" min="0.01" max="0.25" step="0.001" value="0.1" id="paintRangeScalar" class="slider" onchange="sliderUpdate_paintRangeScalar()">
+                    <p  class="uiLabel">Feed/Kill Preset</p>
+                    <select id="feedKillPreset" class="dropDown"  onchange="dropDownUpdate_feedKillPreset()">
+                        <option value="mazes">Mazes</option>
+                        <option value="solitions">Solitions</option>
+                        <option value="pulsating solitions">Pulsating Solitions</option>
+                        <option value="worms">Worms</option>
+                        <option value="holes">Holes</option>
+                        <option value="chaos">Chaos</option>
+                        <option value="chaos and holes (by clem)">Chaos and Holes (by clem)</option>
+                        <option value="moving spots">Moving Spots</option>
+                        <option value="spots and loops">Spots and Loops</option>
+                        <option value="waves">Waves</option>
+                        <option value="the u-skate world">The U-Skate World</option>
+                    </select> 
+                    <p></p><br>
+                    <button id="reset" onclick="buttonUpdate_reset()" class="button">Reset!</button>
+                </div>
+                <div id="rd">
+                    <main></main>
+                </div>
+            </div>
+            <p class="uiLabel">Author</p>
+            <a href="https://jyamada-portfolio.com/">by James Yamada</a> <br>
+            <a href="https://github.com/jimothy001/GrayScottPerlin">Git Repo</a> <br>
+            <p class="uiLabel">Acknowledgements</p>
+            <a href="http://karlsims.com/rd.html">Karl Sims</a> <br>
+            <a href="https://youtu.be/BV9ny785UNc">Daniel Shiffman, the Coding Train</a> <br>
+            <a href="https://github.com/pmneila/jsexp">Pmneila, jsexp</a> <br>
+        </div>
         
-        <main>
-            
-        </main>
-        <!-- <h1>Gray Scott Plus!</h1> -->
     </body>
 </html>
