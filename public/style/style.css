@@ -1,5 +1,5 @@
 body {
-    font-family: 'consolas', 'Lucida Console' 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', monospace;
+    font-family: 'consolas', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', monospace;
     background-color: white;
     color: black;
     font-size: 16px;
@@ -40,7 +40,7 @@ input {
     width: 80%;
     -webkit-transition: .2s;
     transition: opacity .2s;
-    font-family: 'consolas', 'Lucida Console' 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', monospace;
+    font-family: 'consolas', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', monospace;
     font-size: 16px;
   }
 
