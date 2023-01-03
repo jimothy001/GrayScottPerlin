@@ -60,9 +60,9 @@ NOTE: Perlin noise bias is generated and applied at the level of the reaction di
 
 *w = base weight of neighbor cell value A or B influence. Orthogonal neighbors are weighted at 0.2 and diagonal neighbors are weighted at 0.05.*
 
-*$\vec{d}$ = direction to neighbor cell from center cell where Laplacian result is being calculated*
+$\vec{d}$ = *direction to neighbor cell from center cell where Laplacian result is being calculated*
 
-*$\vec{k}$ = local bias vector*
+$\vec{k}$ = *local bias vector*
 
 *s = global arbitrary bias scalar, which can be thought of as current strength*
 
