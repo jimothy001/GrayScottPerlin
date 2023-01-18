@@ -32,8 +32,8 @@ let paintRangeScalar = 0.1; //paint brush radius
 let noiseScalar = 0.008;
 let vecScalar = 0.5;//0.04;
 
-//presets from https://github.com/pmneila/jsexp
-feedKillPresets = {
+/**presets from https://github.com/pmneila/jsexp*/
+const feedKillPresets = {
     "mazes": {feed: 0.029, kill: 0.057},
     "solitions": {feed: 0.03, kill: 0.062},
     "pulsating solitions": {feed: 0.025, kill: 0.062},
@@ -48,14 +48,14 @@ feedKillPresets = {
 };
 
 
-//p5 preload. This is where shaders are loaded
+/**p5 preload. This is where shaders are loaded*/
 preload = () => {
     shaderEditStep = loadShader('shaders/grid.vert', 'shaders/gridEditStep.frag');
     shaderGrayScottPerlin = loadShader('shaders/grid.vert', 'shaders/gridGrayScottPerlin.frag');
     shaderDraw = loadShader('shaders/grid.vert', 'shaders/gridDraw.frag');
 }
 
-//p5 setup. This is called once at the beginning of runtime
+/**p5 setup. This is called once at the beginning of runtime*/
 setup = () => {
 
     pixelDensity(1);
@@ -91,7 +91,7 @@ setup = () => {
     resetGrid();
 }
 
-//p5 draw loop. This is called every frame
+/**p5 draw loop. This is called every frame*/
 draw = () => {
 
     background(255);
@@ -113,8 +113,8 @@ draw = () => {
     drawPaintRadius();
 }
 
-//Applies GrayScottPerlin shader to buffer
-Buffer_GrayScottPerlin = (buffer, texShader, grid, gridNoise) =>
+/**Applies GrayScottPerlin shader to buffer */
+const Buffer_GrayScottPerlin = (buffer, texShader, grid, gridNoise) =>
 {
     buffer.shader(texShader);
 
@@ -136,8 +136,8 @@ Buffer_GrayScottPerlin = (buffer, texShader, grid, gridNoise) =>
     return buffer;
 }
 
-//Applies EditStep shader to buffer
-Buffer_EditStep = (buffer, texShader, grid, paintX, paintY, range, reset) =>
+/**Applies EditStep shader to buffer*/
+const Buffer_EditStep = (buffer, texShader, grid, paintX, paintY, range, reset) =>
 {
     buffer.shader(texShader);
 
@@ -155,8 +155,8 @@ Buffer_EditStep = (buffer, texShader, grid, paintX, paintY, range, reset) =>
     return buffer;
 }
 
-//Applies Draw shader to buffer
-Buffer_Draw = (buffer, texShader, grid) =>
+/**Applies Draw shader to buffer*/
+const Buffer_Draw = (buffer, texShader, grid) =>
 {
     buffer.shader(texShader);
 
@@ -170,10 +170,10 @@ Buffer_Draw = (buffer, texShader, grid) =>
     return buffer;
 }
 
-//initializes perlin noise vector grid.
-//noise is generated and cached at the level of the RD grid square to regularize resolution of information
-//noise is averaged and drawn at a larger scale for readability
-initVecGrid = (image, w, h) => {
+/**Initializes perlin noise vector grid.
+*Noise is generated and cached at the level of the RD grid square to regularize resolution of information.
+*Noise is averaged and drawn at a larger scale for readability*/
+const initVecGrid = (image, w, h) => {
     
     gridVec = [];
     
@@ -190,9 +190,9 @@ initVecGrid = (image, w, h) => {
     }
 }
 
-//returns average noise vector for a given region of the RD grid.
-//noise is generated and cached at the level of the RD grid square to regularize resolution of information
-//noise is averaged and drawn at a larger scale for readability
+/**Returns average noise vector for a given region of the RD grid.
+*Noise is generated and cached at the level of the RD grid square to regularize resolution of information
+*Noise is averaged and drawn at a larger scale for readability*/
 getCellAvgNoise = (image, startX, endX, startY, endY) => 
 {
     let avgX = 0;
@@ -228,8 +228,8 @@ getCellAvgNoise = (image, startX, endX, startY, endY) =>
     return vec;
 }
 
-//returns average of value array
-getAvg = (arr, start, end) => 
+/**returns average of value array*/
+const getAvg = (arr, start, end) => 
 {
     let avg = 0;
     const divisor = end - start;
@@ -242,51 +242,51 @@ getAvg = (arr, start, end) =>
     return avg / divisor;
 }
 
-//returns single 2d noise value based on x and y position
-gen2dUnitNoise = (x, y) => {
+/**returns single 2d noise value based on x and y position*/
+const gen2dUnitNoise = (x, y) => {
     return map(noise(x, y), 0, 1, -1, 1);
 }
 
-//ui => updates noise field scale (higher scale = more detail)
-sliderUpdate_noiseScalar = () => {
+/**ui => updates noise field scale (higher scale = more detail)*/
+const sliderUpdate_noiseScalar = () => {
     noiseScalar = document.getElementById("noiseScalar").value;
     document.getElementById("noiseScalarText").innerHTML = 'Noise Detail Scalar: ' + round(noiseScalar, 4);
     setPerlinNoise(noiseTexture, w, h);
     initVecGrid(noiseTexture, w, h);
 }
 
-//ui => udpates noise vector scalar
-sliderUpdate_vecScalar = () => {
+/**ui => udpates noise vector scalar*/
+const sliderUpdate_vecScalar = () => {
     vecScalar = document.getElementById("vecScalar").value;
     document.getElementById("vecScalarText").innerHTML = 'Noise Magnitude Scalar: ' + round(vecScalar, 2);
 }
 
-//ui => updates feed rate scalar
-sliderUpdate_feedScalar = () => {
+/**ui => updates feed rate scalar*/
+const sliderUpdate_feedScalar = () => {
     feedRate = document.getElementById("feedScalar").value;
     document.getElementById("feedScalarText").innerHTML = 'Feed Rate Scalar: ' + round(feedRate, 3);
 }
 
-//ui => updates kill rate scalar
-sliderUpdate_killScalar = () => {
+/**ui => updates kill rate scalar*/
+const sliderUpdate_killScalar = () => {
     killRate = document.getElementById("killScalar").value;
     document.getElementById("killScalarText").innerHTML = 'Kill Rate Scalar: ' + round(killRate, 3);
 }
 
-//ui => updates time step scalar
-sliderUpdate_timeScalar = () => {
+/**ui => updates time step scalar*/
+const sliderUpdate_timeScalar = () => {
     timeScalar = document.getElementById("timeScalar").value;
     document.getElementById("timeScalarText").innerHTML = 'Time Scalar: ' + round(timeScalar, 2);
 }
 
-//ui => updates paint radius
-sliderUpdate_paintRangeScalar = () => {
+/**ui => updates paint radius*/
+const sliderUpdate_paintRangeScalar = () => {
     paintRangeScalar = document.getElementById("paintRangeScalar").value;
     document.getElementById("paintRangeScalarText").innerHTML = 'Paint Radius: ' + round(paintRangeScalar, 2);
 }
 
-//ui => updates feed and kill rates
-dropDownUpdate_feedKillPreset = () => {
+/**ui => updates feed and kill rates*/
+const dropDownUpdate_feedKillPreset = () => {
     const preset = feedKillPresets[document.getElementById("feedKillPreset").value];
     document.getElementById("feedScalar").value = feedRate = preset.feed;
     document.getElementById("killScalar").value = killRate = preset.kill;
@@ -294,18 +294,18 @@ dropDownUpdate_feedKillPreset = () => {
     document.getElementById("killScalarText").innerHTML = 'Kill Rate Scalar: ' + round(killRate, 3);
 }
 
-//ui => resetGrid
-buttonUpdate_reset = () => {
+/**ui => resetGrid*/
+const buttonUpdate_reset = () => {
     resetGrid();
 }
 
-//resets RD grid to its original state
-resetGrid = () => {
+/**resets RD grid to its original state*/
+const resetGrid = () => {
     gridBufferNow = Buffer_EditStep(gridBufferNow, shaderEditStep, gridBufferNext, w * 0.5, h * 0.5, 0.25, true);
 }
 
-//sets perlin noise texture
-setPerlinNoise = (image, w, h) => {
+/**sets perlin noise texture*/
+const setPerlinNoise = (image, w, h) => {
     
     image.loadPixels();
 
@@ -344,8 +344,8 @@ setPerlinNoise = (image, w, h) => {
     image.updatePixels();
 }
 
-//draws vector grid
-drawVecGrid = (buffer) => {
+/**draws vector grid*/
+const drawVecGrid = (buffer) => {
 
     buffer.clear();
 
@@ -369,8 +369,8 @@ drawVecGrid = (buffer) => {
     }
 }
 
-//draws paint radius UI element at mouse cursor position
-drawPaintRadius = () =>{
+/**draws paint radius UI element at mouse cursor position*/
+const drawPaintRadius = () =>{
 
     if(mouseX > 0 && mouseX < w && mouseY > 0 && mouseY < h) //if(mouseX > uiWidth && mouseX < totalWidth && mouseY > 0 && mouseY < h) 
     {

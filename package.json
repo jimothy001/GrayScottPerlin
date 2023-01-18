@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@appland/appmap-agent-js": "^12.2.0",
-    "express": "*"
+    "express": "*",
+    "jsconfig.json": "^2.3.3",
+    "lodash":"*"
   },
   "devDependencies": {
     "got": "^11.3.0",
