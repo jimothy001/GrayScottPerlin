@@ -1,4 +1,4 @@
-# GrayScott + Perlin Noise
+# Reaction Diffusion Gray Scott Model with Perlin Noise
 
 ### A running instance of this experiment can be found here: https://gray-scott-perlin.herokuapp.com/
 
