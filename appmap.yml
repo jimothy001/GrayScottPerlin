@@ -1,0 +1,5 @@
+name: GrayScottPlus
+packages:
+  - path: public\js
+language: javascript
+appmap_dir: tmp/appmap

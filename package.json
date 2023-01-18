@@ -10,6 +10,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "@appland/appmap-agent-js": "^12.2.0",
     "express": "*"
   },
   "devDependencies": {
